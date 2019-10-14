@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack-dev-server",
     "build": "cross-env NODE_ENV=production webpack",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cross-env NODE_ENV=test jest"
   },
   "repository": {
     "type": "git",
@@ -21,19 +21,21 @@
   "devDependencies": {
     "@babel/core": "^7.6.4",
     "@babel/preset-env": "^7.6.3",
+    "autoprefixer": "^9.6.5",
+    "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
+    "cross-env": "^6.0.3",
     "css-loader": "^3.2.0",
+    "cssnano": "^4.1.10",
     "file-loader": "^4.2.0",
+    "jest": "^24.9.0",
     "node-sass": "^4.12.0",
+    "postcss-loader": "^3.0.0",
     "sass-loader": "^8.0.0",
     "style-loader": "^1.0.0",
     "webpack": "^4.41.1",
     "webpack-cli": "^3.3.9",
-    "webpack-dev-server": "^3.8.2",
-    "autoprefixer": "^9.6.5",
-    "cross-env": "^6.0.3",
-    "cssnano": "^4.1.10",
-    "postcss-loader": "^3.0.0"
+    "webpack-dev-server": "^3.8.2"
   },
   "dependencies": {},
   "browserslist": [
