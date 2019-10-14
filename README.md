@@ -1,9 +1,3 @@
----
-title: Talk slides template
-tags: Templates, Talk
-description: View the slide with "Slide Mode".
----
-
 # Project BatMovies 🎬
 
 ---
