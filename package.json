@@ -21,6 +21,7 @@
   "devDependencies": {
     "@babel/core": "^7.6.4",
     "@babel/preset-env": "^7.6.3",
+    "@fortawesome/fontawesome-free": "^5.11.2",
     "autoprefixer": "^9.6.5",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
