@@ -1,0 +1,12 @@
+// Bootstrap components
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/grid";
+
+// Global
+@import 'common/variables';
+@import 'common/global';
+
+// Sections
+@import 'sections/header';

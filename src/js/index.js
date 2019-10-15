@@ -1,6 +1,8 @@
-import '../scss/style.scss';
+import '../scss/main.scss';
+import searchAPI from "./services/searchAPI";
 
-const app = { test: "test" };
-const app2 = { ...app };
+const search = searchAPI("https://www.omdbapi.com/", "5bfbda98");
 
-document.getElementById("app").innerHTML = app2.test;
+search("avengers", results => {
+  console.log(results);
+});
