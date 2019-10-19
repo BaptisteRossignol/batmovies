@@ -5,8 +5,13 @@
     </head>
     <body>
         <header class="main-menu">
-            <img src="https://via.placeholder.com/468x60?text=BatMovies" />
-            <p>BARRE DE RECHERCHE</p>
+            <div id="logo_batmovies"></div>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button">Button</button>
+                </div>
+            </div>
             <ul class="main-menu-right">
                 <li>Accueil</li>
                 <li>Mes Favoris <i class="fas fa-heart"></i></li>
@@ -14,6 +19,7 @@
         </header>
         <div class="container">
             <div class="latest-movies row">
+                <h2>Derniers films sortis</h2>
                 <div id="movies-latest"></div>
             </div>
         </div>

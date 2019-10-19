@@ -3,7 +3,13 @@
         display: flex;
         padding: 20px 0;
 
+        .description-top {
+            display: flex;
+            justify-content: space-between;
+        }
+
         &-description {
+            width: 100%;
             margin-left: 15px;
         }
 
@@ -12,6 +18,10 @@
             font-size: 22px;
             font-weight: bold;
             color: #202020;
+
+            i {
+                text-align: right;
+            }
         }
 
         &-release-date {

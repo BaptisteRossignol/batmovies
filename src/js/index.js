@@ -3,6 +3,9 @@ import '@fortawesome/fontawesome-free/js/solid';
 import '@fortawesome/fontawesome-free/js/regular';
 import '@fortawesome/fontawesome-free/js/brands';
 
+import logo_batmovies from "../img/logo_batmovies.png";
+import another_poster from "../img/another_poster.png";
+
 import '../scss/main.scss';
 import searchAPI from "./services/searchAPI";
 import latestAPI from "./services/latestAPI";
@@ -14,6 +17,12 @@ const keyAPI = "7773119c011cc12e9264e289fc360af2";
 const search = searchAPI(linkAPI, keyAPI);
 const latest = latestAPI(linkAPI, keyAPI);
 const searchById = searchByIdAPI(linkAPI, keyAPI);
+
+function time_convert(num) { 
+  let hours = Math.floor(num / 60);  
+  let minutes = num % 60;
+  return hours + "h" + minutes;         
+}
 
 search("avengers", results => {
 });
@@ -32,16 +41,28 @@ latest(results => {
   
       content += '<div class="col-md-8 movie">';
   
-      if (movie.poster_path != null) {
-        content += '<img src="https://image.tmdb.org/t/p/w500/' + movie.poster_path + '" class="movie-image" />';
+      if (movie.poster_path == null) {
+        content += '<img src="dist/' + another_poster + '" alt="Aucune affiche disponible pour ce film">'
       } else {
-        content += '<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/1200px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg" class="movie-image" />';
+        content += '<img src="https://image.tmdb.org/t/p/w500/' + movie.poster_path + '" class="movie-image" />';
       }
   
       content += '<div class="movie-description">';
-      content += '<p class="movie-title">' + movie.title + '</p>';
-      content += '<p class="movie-release-date"><i class="far fa-calendar-alt"></i>' + dateMovie + ' | </p>';
-      content += '<p class="movie-overview">' + movie.overview + '</p>';
+      content += '<div class="description-top"><p class="movie-title">' + movie.title + '</p><i style="color: red;" class="fas fa-heart"></i></div>';
+      content += '<p class="movie-release-date"><i class="far fa-calendar-alt"></i>' + dateMovie;
+      
+      if (movie.runtime == 0 || movie.runtime == null) {
+        content += '</p>';
+      } else {
+        content += ' | ' + time_convert(movie.runtime) + '</p>';
+      }
+
+      if (movie.overtime === "") {
+        content += "<p class='movie-overview'>Aucune description n'est disponible pour ce film</p>";
+      } else {
+        content += '<p class="movie-overview">' + movie.overview + '</p>';
+      }
+
       content += '</div>';
       content += '</div>';
 
@@ -49,3 +70,5 @@ latest(results => {
     })
   });
 });
+
+document.getElementById("logo_batmovies").innerHTML = '<img src="dist/' + logo_batmovies + '" alt="Logo BatMovies">';
