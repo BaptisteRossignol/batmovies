@@ -1,16 +1,19 @@
 .latest-movies {
     .movie {
         display: flex;
-        padding: 20px 0;
+        background-color: #fff;
+        box-shadow: 1px 1px 8px 1px #e6ebef;
+        border-radius: 10px;
+        margin-bottom: 30px;
 
         .description-top {
             display: flex;
             justify-content: space-between;
         }
-
+        
         &-description {
             width: 100%;
-            margin-left: 15px;
+            padding: 20px;
         }
 
         &-title {

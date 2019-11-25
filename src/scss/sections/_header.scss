@@ -1,6 +1,7 @@
 .main-menu {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     flex-direction: row;
     background-color: $primary-color;
     padding: 10px 20px;
@@ -21,7 +22,31 @@
         align-items: center;
 
         img {
-            max-width: 358px;
+            max-width: 270px;
+        }
+    }
+
+    #search-form {
+        display: flex;
+        flex-direction: row;
+        height: 40px;
+
+        .search-bar {
+            width: 300px;
+            border-radius: 10px 0 0 10px;
+            border: none;
+        }
+
+        .search-button {
+            background-color: transparent;
+            border: none;
+            color: #fff;
+            padding: 0 10px;
+            font-size: 18px;
+
+            &:hover {
+                cursor: pointer;
+            }
         }
     }
 }
