@@ -7,6 +7,8 @@
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 @import "~bootstrap/scss/grid";
+@import "~bootstrap/scss/reboot";
+@import "~bootstrap/scss/nav";
 
 // Global
 @import 'common/variables';
@@ -15,3 +17,4 @@
 // Sections
 @import 'sections/header';
 @import 'sections/latest-movies';
+@import 'sections/movies-filter';
