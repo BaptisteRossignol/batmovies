@@ -40,13 +40,14 @@ latest((results) => {
   let content = '<h2>Derniers films sortis</h2>';
   const favoriteMovies = Object.keys(sessionStorage);
 
-  console.log(favoriteMovies);
-
   latestMovies.forEach((movie) => {
     searchById(movie.id, (oneMovie) => {
-      console.log(oneMovie.vote_average * 10);
       const date = new Date(oneMovie.release_date);
       const dateMovie = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+      let overviewSlice = oneMovie.overview;
+      if (overviewSlice.length > 199) {
+        overviewSlice = `${oneMovie.overview.slice(0, 250)}...`;
+      }
 
       content += '<div class="movie">';
 
@@ -84,10 +85,10 @@ latest((results) => {
       }
 
 
-      if (oneMovie.overview === '') {
+      if (overviewSlice === '') {
         content += "<p class='movie-overview'>Aucune description n'est disponible pour ce film.</p>";
       } else {
-        content += `<p class="movie-overview">${oneMovie.overview}</p>`;
+        content += `<p class="movie-overview">${overviewSlice}</p>`;
       }
 
       content += '</div>';
