@@ -1,4 +1,8 @@
 .latest-movies {
+    @media (max-width: 768px) {
+        flex-direction: column-reverse;
+    }
+
     .movie {
         display: flex;
         background-color: #fff;
