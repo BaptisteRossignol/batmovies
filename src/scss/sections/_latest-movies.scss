@@ -9,6 +9,13 @@
         box-shadow: 1px 1px 8px 1px #e6ebef;
         border-radius: 10px;
         margin-bottom: 30px;
+        position: relative;
+
+        &-details {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+        }
 
         .description-top {
             display: flex;
@@ -20,8 +27,17 @@
             padding: 20px;
 
             .star-rating {
-                background-color: yellow;
-                height: 20px;
+                position: relative;
+                width: 106px;
+                color: $primary-color;
+    
+                &-yellow {
+                    position: absolute;
+                    overflow: hidden;
+                    height: 20px;
+                    top: 0;
+                    color: $primary-color;
+                }
             }
         }
 
