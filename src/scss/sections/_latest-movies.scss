@@ -20,6 +20,10 @@
         .description-top {
             display: flex;
             justify-content: space-between;
+
+            svg {
+                cursor: pointer;
+            }
         }
         
         &-description {

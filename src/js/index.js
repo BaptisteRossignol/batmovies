@@ -25,13 +25,34 @@ function timeConvert(num) {
   return `${hours}h${minutes}`;
 }
 
+window.changeHeart = function(id) {
+  let favoriteMovies = Object.keys(sessionStorage);
+  let element = document.getElementById(id);
+
+  if (favoriteMovies.includes(id.toString())) {
+    element.classList.remove('fas');
+    element.classList.add('far');
+    element.style.color = '#000';
+    sessionStorage.removeItem(id);
+  } else {
+    element.classList.remove('far');
+    element.classList.add('fas');
+    element.style.color = '#ff0000';
+    sessionStorage.setItem(id, id);
+  }
+}
+
+window.toggleButton = function() {
+  alert('test');
+}
+
 // search('avengers', (results) => {
 //   console.log(results);
 // });
 
-// function myFavourites() {
-//   document.getElementById('movies-latest').innerHTML = '<p>test</p>';
-// }
+window.displayFavorites = function() {
+  document.getElementById('movies-latest').innerHTML = '<p>test</p>';
+}
 
 latest((results) => {
   const latestMovies = results.results;
@@ -60,17 +81,9 @@ latest((results) => {
                       <p class="movie-title">${oneMovie.title}</p>`;
 
       if (favoriteMovies.includes(oneMovie.id.toString())) {
-        content += `<div id="${oneMovie.id}" class="favorite" onClick="sessionStorage.removeItem(id)">
-                      <div id="change-heart">
-                        <i style="color: red;" id="heart" class="fas fa-heart favorite"></i>
-                      </div>
-                    </div>`;
+        content += `<i id="${oneMovie.id}" onclick="changeHeart(${oneMovie.id})" style="color: #ff0000" class="fas fa-heart"></i>`;
       } else {
-        content += `<div id="${oneMovie.id}" class="favorite" onClick="sessionStorage.setItem(id, id)">
-                      <div id="change-heart">
-                        <i style="color: red;" id="heart" class="far fa-heart favorite"></i>
-                      </div>
-                    </div>`;
+        content += `<i id="${oneMovie.id}" onclick="changeHeart(${oneMovie.id})" class="far fa-heart"></i>`;
       }
 
       content += `</div>
@@ -104,7 +117,7 @@ latest((results) => {
       }
 
       content += '<button type="button" class="btn btn-light movie-details">Voir les détails</button></div>';
-      content += '</div>';
+      content += `</div>`;
 
       document.getElementById('movies-latest').innerHTML = content;
     });
@@ -130,22 +143,3 @@ function movieFilter() {
 movieFilter();
 
 document.getElementById('logo_batmovies').innerHTML = `<img src="dist/${logoBatmovies}" alt="Logo BatMovies">`;
-
-// function changeHeart(id) {
-//   const favoriteMovies = Object.keys(sessionStorage);
-//   const element = document.getElementById(id).childNodes;
-//   console.log(element);
-
-//   if (favoriteMovies.includes(id.toString())) {
-//     element.className.remove('fas');
-//     element.className.add('far');
-//   } else {
-//     element.className.remove('far');
-//     element.className.add('fas');
-//   }
-// }
-
-
-// document.getElementById('change-heart').onclick = () => {
-//   alert('NTM OHHHHHHHHHH');
-// };
