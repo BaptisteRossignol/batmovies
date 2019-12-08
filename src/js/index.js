@@ -42,87 +42,155 @@ window.changeHeart = function(id) {
   }
 }
 
-window.toggleButton = function() {
-  alert('test');
-}
-
 // search('avengers', (results) => {
 //   console.log(results);
 // });
 
 window.displayFavorites = function() {
-  document.getElementById('movies-latest').innerHTML = '<p>test</p>';
-}
+  latest((results) => {
+    const latestMovies = results.results;
+    let content = '<h2>Mes films favoris</h2>';
+    const favoriteMovies = Object.keys(sessionStorage);
 
-latest((results) => {
-  const latestMovies = results.results;
-  let content = '<h2>Derniers films sortis</h2>';
-  const favoriteMovies = Object.keys(sessionStorage);
+    latestMovies.forEach((movie) => {
+      searchById(movie.id, (oneMovie) => {
+        if(favoriteMovies.includes(oneMovie.id.toString())) {
+          const date = new Date(oneMovie.release_date);
+          const dateMovie = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+          let overviewSlice = oneMovie.overview;
+          if (overviewSlice.length > 199) {
+            overviewSlice = `${oneMovie.overview.slice(0, 250)}...`;
+          }
 
-  latestMovies.forEach((movie) => {
-    searchById(movie.id, (oneMovie) => {
-      const date = new Date(oneMovie.release_date);
-      const dateMovie = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-      let overviewSlice = oneMovie.overview;
-      if (overviewSlice.length > 199) {
-        overviewSlice = `${oneMovie.overview.slice(0, 250)}...`;
-      }
+          content += '<div class="movie">';
 
-      content += '<div class="movie">';
+          if (oneMovie.poster_path == null) {
+            content += `<img src="dist/${anotherPoster}" alt="Aucune affiche disponible pour ce film">`;
+          } else {
+            content += `<img src="https://image.tmdb.org/t/p/w500/${oneMovie.poster_path}" class="movie-image" />`;
+          }
 
-      if (oneMovie.poster_path == null) {
-        content += `<img src="dist/${anotherPoster}" alt="Aucune affiche disponible pour ce film">`;
-      } else {
-        content += `<img src="https://image.tmdb.org/t/p/w500/${oneMovie.poster_path}" class="movie-image" />`;
-      }
+          content += `<div class="movie-description">
+                        <div class="description-top">
+                          <p class="movie-title">${oneMovie.title}</p>`;
 
-      content += `<div class="movie-description">
-                    <div class="description-top">
-                      <p class="movie-title">${oneMovie.title}</p>`;
+          if (favoriteMovies.includes(oneMovie.id.toString())) {
+            content += `<i id="${oneMovie.id}" onclick="changeHeart(${oneMovie.id})" style="color: #ff0000" class="fas fa-heart"></i>`;
+          } else {
+            content += `<i id="${oneMovie.id}" onclick="changeHeart(${oneMovie.id})" class="far fa-heart"></i>`;
+          }
 
-      if (favoriteMovies.includes(oneMovie.id.toString())) {
-        content += `<i id="${oneMovie.id}" onclick="changeHeart(${oneMovie.id})" style="color: #ff0000" class="fas fa-heart"></i>`;
-      } else {
-        content += `<i id="${oneMovie.id}" onclick="changeHeart(${oneMovie.id})" class="far fa-heart"></i>`;
-      }
+          content += `</div>
+                      <p class="movie-release-date"><i class="far fa-calendar-alt"></i>${dateMovie}`;
 
-      content += `</div>
-                  <p class="movie-release-date"><i class="far fa-calendar-alt"></i>${dateMovie}`;
+          if (oneMovie.runtime === 0 || oneMovie.runtime == null) {
+            content += '</p>';
+          } else {
+            content += ` | ${timeConvert(oneMovie.runtime)}`;
+          }
 
-      if (oneMovie.runtime === 0 || oneMovie.runtime == null) {
-        content += '</p>';
-      } else {
-        content += ` | ${timeConvert(oneMovie.runtime)}`;
-      }
+          content += `<div class="star-rating">
+            <i class="far fa-star"></i>
+            <i class="far fa-star"></i>
+            <i class="far fa-star"></i>
+            <i class="far fa-star"></i>
+            <i class="far fa-star"></i>
+            <div class="star-rating-yellow" style="width: ${oneMovie.vote_average * 10}%">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+          </div>`;
 
-      content += `<div class="star-rating">
-        <i class="far fa-star"></i>
-        <i class="far fa-star"></i>
-        <i class="far fa-star"></i>
-        <i class="far fa-star"></i>
-        <i class="far fa-star"></i>
-        <div class="star-rating-yellow" style="width: ${oneMovie.vote_average * 10}%">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-        </div>
-      </div>`;
+          if (overviewSlice === '') {
+            content += "<p class='movie-overview'>Aucune description n'est disponible pour ce film.</p>";
+          } else {
+            content += `<p class="movie-overview">${overviewSlice}</p>`;
+          }
 
-      if (overviewSlice === '') {
-        content += "<p class='movie-overview'>Aucune description n'est disponible pour ce film.</p>";
-      } else {
-        content += `<p class="movie-overview">${overviewSlice}</p>`;
-      }
+          content += '<button type="button" class="btn btn-light movie-details">Voir les détails</button></div>';
+          content += `</div>`;
 
-      content += '<button type="button" class="btn btn-light movie-details">Voir les détails</button></div>';
-      content += `</div>`;
-
-      document.getElementById('movies-latest').innerHTML = content;
+          document.getElementById('movies-latest').innerHTML = content;
+        }
+      });
     });
   });
-});
+}
+
+window.displayLatest = function() {
+  latest((results) => {
+    const latestMovies = results.results;
+    let content = '<h2>Derniers films sortis</h2>';
+    const favoriteMovies = Object.keys(sessionStorage);
+
+    latestMovies.forEach((movie) => {
+      searchById(movie.id, (oneMovie) => {
+        const date = new Date(oneMovie.release_date);
+        const dateMovie = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+        let overviewSlice = oneMovie.overview;
+        if (overviewSlice.length > 199) {
+          overviewSlice = `${oneMovie.overview.slice(0, 250)}...`;
+        }
+
+        content += '<div class="movie">';
+
+        if (oneMovie.poster_path == null) {
+          content += `<img src="dist/${anotherPoster}" alt="Aucune affiche disponible pour ce film">`;
+        } else {
+          content += `<img src="https://image.tmdb.org/t/p/w500/${oneMovie.poster_path}" class="movie-image" />`;
+        }
+
+        content += `<div class="movie-description">
+                      <div class="description-top">
+                        <p class="movie-title">${oneMovie.title}</p>`;
+
+        if (favoriteMovies.includes(oneMovie.id.toString())) {
+          content += `<i id="${oneMovie.id}" onclick="changeHeart(${oneMovie.id})" style="color: #ff0000" class="fas fa-heart"></i>`;
+        } else {
+          content += `<i id="${oneMovie.id}" onclick="changeHeart(${oneMovie.id})" class="far fa-heart"></i>`;
+        }
+
+        content += `</div>
+                    <p class="movie-release-date"><i class="far fa-calendar-alt"></i>${dateMovie}`;
+
+        if (oneMovie.runtime === 0 || oneMovie.runtime == null) {
+          content += '</p>';
+        } else {
+          content += ` | ${timeConvert(oneMovie.runtime)}`;
+        }
+
+        content += `<div class="star-rating">
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+          <div class="star-rating-yellow" style="width: ${oneMovie.vote_average * 10}%">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+        </div>`;
+
+        if (overviewSlice === '') {
+          content += "<p class='movie-overview'>Aucune description n'est disponible pour ce film.</p>";
+        } else {
+          content += `<p class="movie-overview">${overviewSlice}</p>`;
+        }
+
+        content += '<button type="button" class="btn btn-light movie-details">Voir les détails</button></div>';
+        content += `</div>`;
+
+        document.getElementById('movies-latest').innerHTML = content;
+      });
+    });
+  });
+}
 
 function movieFilter() {
   let content = '<div class="movies-filter">';
@@ -141,5 +209,6 @@ function movieFilter() {
   document.getElementById('movies-filter').innerHTML = content;
 }
 movieFilter();
+displayLatest();
 
 document.getElementById('logo_batmovies').innerHTML = `<img src="dist/${logoBatmovies}" alt="Logo BatMovies">`;
