@@ -23,6 +23,10 @@
 
             svg {
                 cursor: pointer;
+
+                &:hover {
+                    color: #ff0000;
+                }
             }
         }
         
@@ -35,7 +39,7 @@
                 width: 106px;
                 color: $primary-color;
     
-                &-yellow {
+                &-red {
                     position: absolute;
                     overflow: hidden;
                     height: 20px;
