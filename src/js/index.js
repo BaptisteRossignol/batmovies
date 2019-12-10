@@ -25,6 +25,13 @@ function timeConvert(num) {
   return `${hours}h${minutes}`;
 }
 
+window.deleteFavorite = function (id) {
+  const element = document.getElementById(id);
+  element.style.display = 'none';
+  sessionStorage.removeItem(id);
+  displayFavorites();
+}
+
 function movieFilter() {
   let content = '<div class="movies-filter">';
 
@@ -60,7 +67,6 @@ window.changeHeart = function (id) {
 }
 
 window.displayFavorites = function () {
-
   let content = '<div class="col-md-12"><h2>Mes films favoris 💕</h2></div>';
   const favoriteMovies = Object.keys(sessionStorage);
 
@@ -87,12 +93,7 @@ window.displayFavorites = function () {
                         <div class="description-top">
                           <p class="movie-title">${oneMovie.title}</p>`;
 
-          if (favoriteMovies.includes(oneMovie.id.toString())) {
-            content += `<i id="${oneMovie.id}" onclick="changeHeart(${oneMovie.id})" style="color: #ff0000" class="fas fa-heart"></i>`;
-          } else {
-            content += `<i id="${oneMovie.id}" onclick="changeHeart(${oneMovie.id})" class="far fa-heart"></i>`;
-          }
-
+          content += `<i id="${oneMovie.id}" onclick="deleteFavorite(${oneMovie.id})" class="far fa-times-circle"></i>`;
           content += `</div>
                       <p class="movie-release-date"><i class="far fa-calendar-alt"></i>${dateMovie}`;
 
@@ -225,82 +226,77 @@ window.displayLatest = function () {
 }
 
 window.displaySearch = function () {
-  const item = document.getElementById('search');
-  item.style.display = 'flex';
   const inputVal = document.getElementById('input-search').value;
+  const favoriteMovies = Object.keys(sessionStorage);
 
   search(inputVal, (results) => {
     const latestMovies = results.results;
     let content = '<div class="col-md-12"><h2>Résultat de recherche</h2></div>';
-    const favoriteMovies = Object.keys(sessionStorage);
 
-    if (favoriteMovies.length > 0) {
-      latestMovies.forEach((movie) => {
-        searchById(movie.id, (oneMovie) => {
-          const date = new Date(oneMovie.release_date);
-          const dateMovie = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-          let overviewSlice = oneMovie.overview;
-          if (overviewSlice.length > 199) {
-            overviewSlice = `${oneMovie.overview.slice(0, 150)}...`;
-          }
+    latestMovies.forEach((movie) => {
+      searchById(movie.id, (oneMovie) => {
+        const date = new Date(oneMovie.release_date);
+        const dateMovie = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+        let overviewSlice = oneMovie.overview;
+        if (overviewSlice.length > 199) {
+          overviewSlice = `${oneMovie.overview.slice(0, 150)}...`;
+        }
 
-          content += '<div class="movie">';
+        content += '<div class="movie">';
 
-          if (oneMovie.poster_path == null) {
-            content += `<img src="dist/${anotherPoster}" alt="Aucune affiche disponible pour ce film">`;
-          } else {
-            content += `<img src="https://image.tmdb.org/t/p/w500/${oneMovie.poster_path}" class="movie-image" />`;
-          }
+        if (oneMovie.poster_path == null) {
+          content += `<img src="dist/${anotherPoster}" alt="Aucune affiche disponible pour ce film">`;
+        } else {
+          content += `<img src="https://image.tmdb.org/t/p/w500/${oneMovie.poster_path}" class="movie-image" />`;
+        }
 
-          content += `<div class="movie-description">
-                        <div class="description-top">
-                          <p class="movie-title">${oneMovie.title}</p>`;
+        content += `<div class="movie-description">
+                      <div class="description-top">
+                        <p class="movie-title">${oneMovie.title}</p>`;
 
-          if (favoriteMovies.includes(oneMovie.id.toString())) {
-            content += `<i id="${oneMovie.id}" onclick="changeHeart(${oneMovie.id})" style="color: #ff0000" class="fas fa-heart"></i>`;
-          } else {
-            content += `<i id="${oneMovie.id}" onclick="changeHeart(${oneMovie.id})" class="far fa-heart"></i>`;
-          }
+        if (favoriteMovies.includes(oneMovie.id.toString())) {
+          content += `<i id="${oneMovie.id}" onclick="changeHeart(${oneMovie.id})" style="color: #ff0000" class="fas fa-heart"></i>`;
+        } else {
+          content += `<i id="${oneMovie.id}" onclick="changeHeart(${oneMovie.id})" class="far fa-heart"></i>`;
+        }
 
-          content += `</div>
-                      <p class="movie-release-date"><i class="far fa-calendar-alt"></i>${dateMovie}`;
+        content += `</div>
+                    <p class="movie-release-date"><i class="far fa-calendar-alt"></i>${dateMovie}`;
 
-          if (oneMovie.runtime === 0 || oneMovie.runtime == null) {
-            content += '</p>';
-          } else {
-            content += ` | ${timeConvert(oneMovie.runtime)}`;
-          }
+        if (oneMovie.runtime === 0 || oneMovie.runtime == null) {
+          content += '</p>';
+        } else {
+          content += ` | ${timeConvert(oneMovie.runtime)}`;
+        }
 
-          content += `<div class="star-rating">
-            <i class="far fa-star"></i>
-            <i class="far fa-star"></i>
-            <i class="far fa-star"></i>
-            <i class="far fa-star"></i>
-            <i class="far fa-star"></i>
-            <div class="star-rating-red" style="width: ${oneMovie.vote_average * 10}%">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-            </div>
-          </div>`;
+        content += `<div class="star-rating">
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+          <div class="star-rating-red" style="width: ${oneMovie.vote_average * 10}%">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+        </div>`;
 
-          if (overviewSlice === '') {
-            content += "<p class='movie-overview'>Aucune description n'est disponible pour ce film.</p>";
-          } else {
-            content += `<p class="movie-overview">${overviewSlice}</p>`;
-          }
+        if (overviewSlice === '') {
+          content += "<p class='movie-overview'>Aucune description n'est disponible pour ce film.</p>";
+        } else {
+          content += `<p class="movie-overview">${overviewSlice}</p>`;
+        }
 
-          content += `<button type="button" class="btn btn-light movie-details"><a onclick="displayOneMovie(${oneMovie.id})">Voir les détails</a></button></div>`;
-          content += '</div>';
-          document.getElementById('movies-search').innerHTML = content;
-        });
+        content += `<button type="button" class="btn btn-light movie-details"><a onclick="displayOneMovie(${oneMovie.id})">Voir les détails</a></button></div>`;
+        content += '</div>';
+        document.getElementById('movies-search').innerHTML = content;
       });
-    } else {
-      content += "<p>Vous n'avez aucun film favoris 😔</p>";
-      document.getElementById('movies-search').innerHTML = content;
-    }
+    });
+      // content += "<p>Vous n'avez aucun film favoris 😔</p>";
+      // document.getElementById('movies-search').innerHTML = content;
 
     const itemMovie = document.getElementById('movie');
     itemMovie.style.display = 'none';
@@ -309,7 +305,7 @@ window.displaySearch = function () {
     const itemFavorite = document.getElementById('favorites');
     itemFavorite.style.display = 'none';
     const itemSearch = document.getElementById('search');
-    itemSearch.style.display = 'block';
+    itemSearch.style.display = 'flex';
     movieFilter();
   });
 }
