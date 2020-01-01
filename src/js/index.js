@@ -130,6 +130,7 @@ window.displayFavorites = function () {
         }
       });
     });
+
   } else {
     content += "<p>Vous n'avez aucun film favoris 😔</p>";
     document.getElementById('movies-favorites').innerHTML = content;
@@ -145,6 +146,7 @@ window.displayFavorites = function () {
   itemSearch.style.display = 'none';
 };
 
+// Display latest movies function
 window.displayLatest = function () {
   latest((results) => {
     const latestMovies = results.results;
@@ -225,6 +227,7 @@ window.displayLatest = function () {
   });
 }
 
+// Search movies function
 window.displaySearch = function () {
   const inputVal = document.getElementById('input-search').value;
   const favoriteMovies = Object.keys(sessionStorage);
@@ -310,6 +313,7 @@ window.displaySearch = function () {
   });
 }
 
+// Display one movie function
 window.displayOneMovie = function(id) {
   searchById(id, (oneMovie) => {
     const date = new Date(oneMovie.release_date);
