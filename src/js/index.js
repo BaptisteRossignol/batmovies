@@ -150,6 +150,7 @@ window.displayFavorites = function () {
 window.displayLatest = function () {
   latest((results) => {
     const latestMovies = results.results;
+    console.log(latestMovies);
     let content = '<h2>Derniers films sortis 🎥</h2>';
     const favoriteMovies = Object.keys(sessionStorage);
 
@@ -298,8 +299,8 @@ window.displaySearch = function () {
         document.getElementById('movies-search').innerHTML = content;
       });
     });
-      // content += "<p>Vous n'avez aucun film favoris 😔</p>";
-      // document.getElementById('movies-search').innerHTML = content;
+    // content += "<p>Vous n'avez aucun film favoris 😔</p>";
+    // document.getElementById('movies-search').innerHTML = content;
 
     const itemMovie = document.getElementById('movie');
     itemMovie.style.display = 'none';
