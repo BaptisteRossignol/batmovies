@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="fr">
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
         <title>BatMovies - Vos films en un clic !</title>
     </head>
     <body>
         <header class="main-menu">
             <a onclick="displayLatest()"><div id="logo_batmovies"></div></a>
+            <ul class="main-menu-right">
+                <li><a onclick="displayLatest()">Accueil</a></li>
+                <li><a onclick="displayFavorites()">Mes Favoris ❤️</a></li>
+            </ul>
             <div id="search-form" class="input-group mb-3">
                 <input type="text" class="form-control" id="input-search" placeholder="Rechercher..." onkeydown="if (event.keyCode == 13)
                 document.getElementById('button-Search').click()" aria-describedby="button-Search">
                 <div class="input-group-append">
                   <button class="btn btn-outline-secondary" onclick="displaySearch()" type="button" id="button-Search"><i class="fas fa-search"></i></button>
                 </div>
-              </div>
-            <ul class="main-menu-right">
-                <li><a onclick="displayLatest()">Accueil</a></li>
-                <li><a onclick="displayFavorites()">Mes Favoris ❤️</a></li>
-            </ul>
+            </div>
         </header>
         <div class="container">
             <div id="latest" class="latest-movies row">

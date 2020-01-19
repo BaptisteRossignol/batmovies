@@ -1,8 +1,7 @@
 .main-menu {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    flex-direction: row;
     background-color: $primary-color;
     padding: 10px 20px;
     margin-bottom: 50px;
@@ -12,11 +11,17 @@
         flex-direction: row;
         list-style-type: none;
         color: #fff;
-        margin-bottom: 0;
+        margin: 10px 0;
 
         li {
             margin: 0 20px;
             cursor: pointer;
+
+            @media (max-width: 576px) {
+                &:first-child {
+                    display: none;
+                }
+            }
         }
     }
 
@@ -27,10 +32,18 @@
 
         img {
             max-width: 200px;
+
+            @media (max-width: 768px) {
+                max-width: 150px;
+            }
         }
     }
 
     #search-form {
         max-width: 30%;
+        
+        @media (max-width: 992px) {
+            max-width: 80%;
+        }
     }
 }

@@ -42,7 +42,12 @@ function movieFilter() {
   </div>
 </nav>
 <div class="tab-content" id="nav-tabContent">
-  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">Filtrer</div>
+  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+    <div class="year section">
+      <label for="Action">Année :</label>
+      <select id="filter-years"></select>
+    </div>
+  </div>
   <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">Trier</div>
 </div>`;
   content += '</div>';
@@ -150,8 +155,9 @@ window.displayFavorites = function () {
 window.displayLatest = function () {
   latest((results) => {
     const latestMovies = results.results;
-    console.log(latestMovies);
     let content = '<h2>Derniers films sortis 🎥</h2>';
+
+    // Get movies in session storage
     const favoriteMovies = Object.keys(sessionStorage);
 
     latestMovies.forEach((movie) => {
@@ -166,9 +172,9 @@ window.displayLatest = function () {
         content += '<div class="movie">';
 
         if (oneMovie.poster_path == null) {
-          content += `<img src="dist/${anotherPoster}" alt="Aucune affiche disponible pour ce film">`;
+          content += `<img onclick="displayOneMovie(${oneMovie.id})" src="dist/${anotherPoster}" alt="Aucune affiche disponible pour ce film">`;
         } else {
-          content += `<img src="https://image.tmdb.org/t/p/w500/${oneMovie.poster_path}" class="movie-image" />`;
+          content += `<img onclick="displayOneMovie(${oneMovie.id})" src="https://image.tmdb.org/t/p/w500/${oneMovie.poster_path}" class="movie-image" />`;
         }
 
         content += `<div class="movie-description">
@@ -316,15 +322,15 @@ window.displaySearch = function () {
 
 // Display one movie function
 window.displayOneMovie = function(id) {
+  const favoriteMovies = Object.keys(sessionStorage);
+
   searchById(id, (oneMovie) => {
+    const genresMovie = oneMovie.genres;
     const date = new Date(oneMovie.release_date);
     const dateMovie = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-    let overviewSlice = oneMovie.overview;
-    if (overviewSlice.length > 199) {
-      overviewSlice = `${oneMovie.overview.slice(0, 250)}...`;
-    }
+    const overviewSlice = oneMovie.overview;
 
-    let content = '<div class="movie">';
+    let content = `<h1>${oneMovie.title}</h1><div class="movie">`;
 
     if (oneMovie.poster_path == null) {
       content += `<img src="dist/${anotherPoster}" alt="Aucune affiche disponible pour ce film">`;
@@ -333,8 +339,7 @@ window.displayOneMovie = function(id) {
     }
 
     content += `<div class="movie-description">
-                  <div class="description-top">
-                    <p class="movie-title">${oneMovie.title}</p>`;
+                  <div class="description-top">`;
 
     content += `</div>
                 <p class="movie-release-date"><i class="far fa-calendar-alt"></i>${dateMovie}`;
@@ -367,6 +372,11 @@ window.displayOneMovie = function(id) {
     }
 
     content += '</div></div>';
+
+    genresMovie.forEach((genreMovie) => {
+      content += `<span class="badge badge-secondary">${genreMovie.name}</span>`;
+    });
+
     document.getElementById('movie-one').innerHTML = content;
 
     const itemMovie = document.getElementById('movie');
@@ -380,7 +390,11 @@ window.displayOneMovie = function(id) {
   });
 }
 
+// Display filter box
 movieFilter();
+
+// Display latest movies
 displayLatest();
 
+// Display logo in menu
 document.getElementById('logo_batmovies').innerHTML = `<img src="dist/${logoBatmovies}" alt="Logo BatMovies">`;

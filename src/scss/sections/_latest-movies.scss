@@ -3,6 +3,12 @@
         flex-direction: column-reverse;
     }
 
+    #movies-latest {
+        @media (max-width: 768px) {
+            margin-top: 20px;
+        }
+    }
+
     .movie {
         display: flex;
         background-color: #fff;
@@ -10,6 +16,12 @@
         border-radius: 10px;
         margin-bottom: 30px;
         position: relative;
+        width: 100%;
+
+        @media (max-width: 576px) {
+            flex-direction: column;
+            align-items: center;
+        }
 
         &-details {
             position: absolute;
@@ -32,7 +44,7 @@
         
         &-description {
             width: 100%;
-            padding: 20px;
+            padding: 20px 20px 40px;
 
             .star-rating {
                 position: relative;
