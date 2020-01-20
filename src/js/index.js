@@ -72,6 +72,7 @@ window.changeHeart = function (id) {
 }
 
 window.displayFavorites = function () {
+  const loaderElement = document.getElementById('loader-latest');
   let content = '<div class="col-md-12"><h2>Mes films favoris 💕</h2></div>';
   const favoriteMovies = Object.keys(sessionStorage);
 
@@ -153,6 +154,7 @@ window.displayFavorites = function () {
 
 // Display latest movies function
 window.displayLatest = function () {
+  const loaderElement = document.getElementById('loader-latest');
   latest((results) => {
     const latestMovies = results.results;
     let content = '<h2>Derniers films sortis 🎥</h2>';
@@ -231,11 +233,13 @@ window.displayLatest = function () {
     itemFavorite.style.display = 'none';
     const itemSearch = document.getElementById('search');
     itemSearch.style.display = 'none';
+    loaderElement.style.display = 'none';
   });
 }
 
 // Search movies function
 window.displaySearch = function () {
+  const loaderElement = document.getElementById('loader-latest');
   const inputVal = document.getElementById('input-search').value;
   const favoriteMovies = Object.keys(sessionStorage);
 
@@ -316,13 +320,14 @@ window.displaySearch = function () {
     itemFavorite.style.display = 'none';
     const itemSearch = document.getElementById('search');
     itemSearch.style.display = 'flex';
+    loaderElement.style.display = 'none';
     movieFilter();
   });
 }
 
 // Display one movie function
 window.displayOneMovie = function(id) {
-  const favoriteMovies = Object.keys(sessionStorage);
+  const loaderElement = document.getElementById('loader-latest');
 
   searchById(id, (oneMovie) => {
     const genresMovie = oneMovie.genres;
@@ -387,6 +392,7 @@ window.displayOneMovie = function(id) {
     itemFavorite.style.display = 'none';
     const itemSearch = document.getElementById('search');
     itemSearch.style.display = 'none';
+    loaderElement.style.display = 'none';
   });
 }
 
