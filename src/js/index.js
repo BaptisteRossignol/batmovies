@@ -57,16 +57,29 @@ function movieFilter() {
 window.changeHeart = function (id) {
   const favoriteMovies = Object.keys(sessionStorage);
   const element = document.getElementById(id);
+  const elementBis = document.getElementById(`${id}-detail`);
 
   if (favoriteMovies.includes(id.toString())) {
     element.classList.remove('fas');
     element.classList.add('far');
     element.style.color = '#000';
+    if (elementBis != null) {
+      elementBis.classList.remove('fas');
+      elementBis.classList.add('far');
+      elementBis.style.color = '#000';
+    }
+
     sessionStorage.removeItem(id);
   } else {
     element.classList.remove('far');
     element.classList.add('fas');
     element.style.color = '#ff0000';
+
+    if (elementBis != null) {
+      elementBis.classList.remove('far');
+      elementBis.classList.add('fas');
+      elementBis.style.color = '#cc0000';
+    }
     sessionStorage.setItem(id, id);
   }
 }
@@ -328,24 +341,33 @@ window.displaySearch = function () {
 // Display one movie function
 window.displayOneMovie = function(id) {
   const loaderElement = document.getElementById('loader-latest');
-
+  const favoriteMovies = Object.keys(sessionStorage);
   searchById(id, (oneMovie) => {
+    console.log(oneMovie);
     const genresMovie = oneMovie.genres;
     const date = new Date(oneMovie.release_date);
     const dateMovie = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
     const overviewSlice = oneMovie.overview;
 
-    let content = `<h1>${oneMovie.title}</h1><div class="movie">`;
+    let content = `<h1>${oneMovie.title}</h1>`;
+
+    if (favoriteMovies.includes(oneMovie.id.toString())) {
+      content += `<i id="${oneMovie.id}-detail" onclick="changeHeart(${oneMovie.id})" style="color: #ff0000" class="fas fa-heart"></i>`;
+    } else {
+      content += `<i id="${oneMovie.id}-detail" onclick="changeHeart(${oneMovie.id})" style="color: #cc0000" class="far fa-heart"></i>`;
+    }
+
+    content += '<div class="movie">';
 
     if (oneMovie.poster_path == null) {
       content += `<img src="dist/${anotherPoster}" alt="Aucune affiche disponible pour ce film">`;
     } else {
       content += `<img src="https://image.tmdb.org/t/p/w500/${oneMovie.poster_path}" class="movie-image" />`;
     }
-
+    
     content += `<div class="movie-description">
-                  <div class="description-top">`;
-
+    <div class="description-top">`;
+    
     content += `</div>
                 <p class="movie-release-date"><i class="far fa-calendar-alt"></i>${dateMovie}`;
 
