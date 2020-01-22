@@ -326,7 +326,7 @@ window.displaySearch = function () {
       });
     });
 
-    document.getElementById('breadcrumb').innerHTML = `<p><a onclick="displayLatest()">Accueil</a> > '${inputVal}'</p>`;
+    document.getElementById('breadcrumb').innerHTML = `<p><a onclick="displayLatest()">Accueil</a> > Recherche '${inputVal}'</p>`;
     const itemMovie = document.getElementById('movie');
     itemMovie.style.display = 'none';
     const itemLatest = document.getElementById('latest');
