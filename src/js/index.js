@@ -155,6 +155,7 @@ window.displayFavorites = function () {
     document.getElementById('movies-favorites').innerHTML = content;
   }
 
+  document.getElementById('breadcrumb').innerHTML = `<p><a onclick="displayLatest()">Accueil</a> > Mes Favoris</p>`;
   const itemMovie = document.getElementById('movie');
   itemMovie.style.display = 'none';
   const itemLatest = document.getElementById('latest');
@@ -238,6 +239,8 @@ window.displayLatest = function () {
         document.getElementById('movies-latest').innerHTML = content;
       });
     });
+
+    document.getElementById('breadcrumb').innerHTML = `<p>Accueil</p>`;
     const itemMovie = document.getElementById('movie');
     itemMovie.style.display = 'none';
     const itemLatest = document.getElementById('latest');
@@ -322,9 +325,8 @@ window.displaySearch = function () {
         document.getElementById('movies-search').innerHTML = content;
       });
     });
-    // content += "<p>Vous n'avez aucun film favoris 😔</p>";
-    // document.getElementById('movies-search').innerHTML = content;
 
+    document.getElementById('breadcrumb').innerHTML = `<p><a onclick="displayLatest()">Accueil</a> > '${inputVal}'</p>`;
     const itemMovie = document.getElementById('movie');
     itemMovie.style.display = 'none';
     const itemLatest = document.getElementById('latest');
@@ -419,6 +421,7 @@ window.displayOneMovie = function(id) {
 
     document.getElementById('movie-one').innerHTML = content;
 
+    document.getElementById('breadcrumb').innerHTML = `<p><a onclick="displayLatest()">Accueil</a> > ${oneMovie.title}</p>`;
     const itemMovie = document.getElementById('movie');
     itemMovie.style.display = 'block';
     const itemLatest = document.getElementById('latest');
