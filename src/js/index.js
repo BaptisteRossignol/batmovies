@@ -345,6 +345,7 @@ window.displayOneMovie = function(id) {
   searchById(id, (oneMovie) => {
     console.log(oneMovie);
     const genresMovie = oneMovie.genres;
+    const productionsMovies = oneMovie.production_companies;
     const date = new Date(oneMovie.release_date);
     const dateMovie = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
     const overviewSlice = oneMovie.overview;
@@ -403,6 +404,18 @@ window.displayOneMovie = function(id) {
     genresMovie.forEach((genreMovie) => {
       content += `<span class="badge badge-secondary">${genreMovie.name}</span>`;
     });
+
+    content += '<div class="movie-productions">';
+
+    productionsMovies.forEach((productionMovie) => {
+      if (productionMovie.logo_path) {
+        content += `<img src="https://image.tmdb.org/t/p/w500/${productionMovie.logo_path}" />`;
+      } else {
+        content += `<p>${productionMovie.name}</p>`;
+      }
+    });
+
+    content += '</div>';
 
     document.getElementById('movie-one').innerHTML = content;
 

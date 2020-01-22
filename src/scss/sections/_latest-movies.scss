@@ -9,6 +9,12 @@
         }
     }
 
+    #movie-one {
+        @media (max-width: 576px) {
+            margin: 0 5px;
+        }
+    }
+
     .movie {
         display: flex;
         background-color: #fff;
@@ -83,6 +89,27 @@
 
         &-image {
             width: 205px;
+        }
+
+        &-productions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-top: 20px;
+
+            @media (max-width: 576px) {
+                flex-direction: column;
+            }
+
+            img {
+                max-width: 120px;
+                margin: 0 20px;
+
+                @media (max-width: 576px) {
+                    margin: 20px 0;
+                }
+            }
         }
     }
 }
