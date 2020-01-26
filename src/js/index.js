@@ -25,6 +25,41 @@ const creditsMovie = creditsMovieAPI(linkAPI, keyAPI);
 const trailerMovie = trailerMovieAPI(linkAPI, keyAPI);
 const getMoviesByYear = getByYearAPI(linkAPI, keyAPI);
 
+function displayPage(pageName) {
+  const itemMovie = document.getElementById('movie');
+  const itemSearch = document.getElementById('search');
+  const itemLatest = document.getElementById('latest');
+  const itemFavorite = document.getElementById('favorites');
+
+  if (pageName === 'favorites') {
+    itemMovie.style.display = 'none';
+    itemLatest.style.display = 'none';
+    itemFavorite.style.display = 'flex';
+    itemSearch.style.display = 'none';
+  } else if (pageName === 'latest' || pageName === 'filter') {
+    itemMovie.style.display = 'none';
+    itemLatest.style.display = 'flex';
+    itemFavorite.style.display = 'none';
+    itemSearch.style.display = 'none';
+  } else if (pageName === 'search') {
+    itemMovie.style.display = 'none';
+    itemLatest.style.display = 'none';
+    itemFavorite.style.display = 'none';
+    itemSearch.style.display = 'flex';
+  } else if (pageName === 'one-movie') {
+    itemMovie.style.display = 'block';
+    itemLatest.style.display = 'none';
+    itemFavorite.style.display = 'none';
+    itemSearch.style.display = 'none';
+  }
+}
+
+function timeConvert(num) {
+  const hours = Math.floor(num / 60);
+  const minutes = num % 60;
+  return `${hours}h${minutes}`;
+}
+
 function displayMainPage(results, title, breadcrumb) {
   const loaderElement = document.getElementById('loader-latest');
   const latestMovies = results.results;
@@ -108,41 +143,6 @@ function getByYear() {
   getMoviesByYear(year, (results) => {
     displayMainPage(results, `<h2>Films populaires de ${year} ⭐</h2>`, `<p><a onclick="displayLatest()">Accueil</a> > Films populaires de ${year}</p>`);
   });
-}
-
-function timeConvert(num) {
-  const hours = Math.floor(num / 60);
-  const minutes = num % 60;
-  return `${hours}h${minutes}`;
-}
-
-function displayPage(pageName) {
-  const itemMovie = document.getElementById('movie');
-  const itemSearch = document.getElementById('search');
-  const itemLatest = document.getElementById('latest');
-  const itemFavorite = document.getElementById('favorites');
-
-  if (pageName === 'favorites') {
-    itemMovie.style.display = 'none';
-    itemLatest.style.display = 'none';
-    itemFavorite.style.display = 'flex';
-    itemSearch.style.display = 'none';
-  } else if (pageName === 'latest' || pageName === 'filter') {
-    itemMovie.style.display = 'none';
-    itemLatest.style.display = 'flex';
-    itemFavorite.style.display = 'none';
-    itemSearch.style.display = 'none';
-  } else if (pageName === 'search') {
-    itemMovie.style.display = 'none';
-    itemLatest.style.display = 'none';
-    itemFavorite.style.display = 'none';
-    itemSearch.style.display = 'flex';
-  } else if (pageName === 'one-movie') {
-    itemMovie.style.display = 'block';
-    itemLatest.style.display = 'none';
-    itemFavorite.style.display = 'none';
-    itemSearch.style.display = 'none';
-  }
 }
 
 window.deleteFavorite = function (id) {
@@ -275,7 +275,6 @@ window.displayFavorites = function () {
         }
       });
     });
-
   } else {
     content += "<p>Vous n'avez aucun film favoris 😔</p>";
     document.getElementById('movies-favorites').innerHTML = content;
@@ -364,7 +363,7 @@ window.displayLatest = function () {
     displayPage('latest');
     loaderElement.style.display = 'none';
   });
-}
+};
 
 // Search movies function
 window.displaySearch = function () {
@@ -438,13 +437,13 @@ window.displaySearch = function () {
         document.getElementById('movies-search').innerHTML = content;
       });
     });
-    
+
     document.getElementById('breadcrumb').innerHTML = `<p><a onclick="displayLatest()">Accueil</a> > Recherche '${inputVal}'</p>`;
-    displayPage("search");
+    displayPage('search');
     loaderElement.style.display = 'none';
     movieFilter();
   });
-}
+};
 
 // Display one movie function
 window.displayOneMovie = function(id) {
@@ -556,7 +555,7 @@ window.displayOneMovie = function(id) {
       });
     });
   });
-}
+};
 
 // Display filter box
 movieFilter();
