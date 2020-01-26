@@ -13,6 +13,7 @@ import latestAPI from './services/latestAPI';
 import searchByIdAPI from './services/searchByIdAPI';
 import creditsMovieAPI from './services/creditsMovieAPI';
 import trailerMovieAPI from './services/trailerMovieAPI';
+import getByYearAPI from './services/getByYearAPI';
 
 const linkAPI = 'https://api.themoviedb.org/3/';
 const keyAPI = '7773119c011cc12e9264e289fc360af2';
@@ -22,6 +23,92 @@ const latest = latestAPI(linkAPI, keyAPI);
 const searchById = searchByIdAPI(linkAPI, keyAPI);
 const creditsMovie = creditsMovieAPI(linkAPI, keyAPI);
 const trailerMovie = trailerMovieAPI(linkAPI, keyAPI);
+const getMoviesByYear = getByYearAPI(linkAPI, keyAPI);
+
+function displayMainPage(results, title, breadcrumb) {
+  const loaderElement = document.getElementById('loader-latest');
+  const latestMovies = results.results;
+  let content = title;
+
+  // Get movies in session storage
+  const favoriteMovies = Object.keys(sessionStorage);
+
+  latestMovies.forEach((movie) => {
+    searchById(movie.id, (oneMovie) => {
+      const date = new Date(oneMovie.release_date);
+      const dateMovie = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+      let overviewSlice = oneMovie.overview;
+      if (overviewSlice.length > 199) {
+        overviewSlice = `${oneMovie.overview.slice(0, 250)}...`;
+      }
+
+      content += '<div class="movie">';
+
+      if (oneMovie.poster_path == null) {
+        content += `<img onclick="displayOneMovie(${oneMovie.id})" src="dist/${anotherPoster}" alt="Aucune affiche disponible pour ce film">`;
+      } else {
+        content += `<img onclick="displayOneMovie(${oneMovie.id})" src="https://image.tmdb.org/t/p/w500/${oneMovie.poster_path}" class="movie-image" />`;
+      }
+
+      content += `<div class="movie-description">
+                    <div class="description-top">
+                      <p class="movie-title">${oneMovie.title}</p>`;
+
+      if (favoriteMovies.includes(oneMovie.id.toString())) {
+        content += `<i id="${oneMovie.id}" onclick="changeHeart(${oneMovie.id})" style="color: #ff0000" class="fas fa-heart"></i>`;
+      } else {
+        content += `<i id="${oneMovie.id}" onclick="changeHeart(${oneMovie.id})" class="far fa-heart"></i>`;
+      }
+
+      content += `</div>
+                  <p class="movie-release-date"><i class="far fa-calendar-alt"></i>${dateMovie}`;
+
+      if (oneMovie.runtime === 0 || oneMovie.runtime == null) {
+        content += '</p>';
+      } else {
+        content += ` | ${timeConvert(oneMovie.runtime)}`;
+      }
+
+      content += `<div class="star-rating">
+        <i class="far fa-star"></i>
+        <i class="far fa-star"></i>
+        <i class="far fa-star"></i>
+        <i class="far fa-star"></i>
+        <i class="far fa-star"></i>
+        <div class="star-rating-red" style="width: ${oneMovie.vote_average * 10}%">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+        </div>
+      </div>`;
+
+      if (overviewSlice === '') {
+        content += "<p class='movie-overview'>Aucune description n'est disponible pour ce film.</p>";
+      } else {
+        content += `<p class="movie-overview">${overviewSlice}</p>`;
+      }
+
+      content += `<button type="button" class="btn btn-light movie-details"><a onclick="displayOneMovie(${oneMovie.id})">Voir les détails</a></button></div>`;
+      content += '</div>';
+
+      document.getElementById('movies-latest').innerHTML = content;
+    });
+  });
+
+  document.getElementById('breadcrumb').innerHTML = breadcrumb;
+  displayPage('filter');
+  loaderElement.style.display = 'none';
+}
+
+function getByYear() {
+  const year = this.value;
+
+  getMoviesByYear(year, (results) => {
+    displayMainPage(results, `<h2>Films populaires de ${year} ⭐</h2>`, `<p><a onclick="displayLatest()">Accueil</a> > Films populaires de ${year}</p>`);
+  });
+}
 
 function timeConvert(num) {
   const hours = Math.floor(num / 60);
@@ -40,7 +127,7 @@ function displayPage(pageName) {
     itemLatest.style.display = 'none';
     itemFavorite.style.display = 'flex';
     itemSearch.style.display = 'none';
-  } else if (pageName === 'latest') {
+  } else if (pageName === 'latest' || pageName === 'filter') {
     itemMovie.style.display = 'none';
     itemLatest.style.display = 'flex';
     itemFavorite.style.display = 'none';
@@ -69,16 +156,22 @@ function movieFilter() {
   let content = '<div class="movies-filter">';
 
   content += `<nav>
-  <div class="nav nav-tabs" id="nav-tab" role="tablist">
-    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Filtrer</a>
-    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Trier</a>
-  </div>
-</nav>
-<div class="tab-content" id="nav-tabContent">
-  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-    <div class="year section">
-      <label for="Action">Année :</label>
-      <select id="filter-years"></select>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Filtrer</a>
+      <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Trier</a>
+    </div>
+  </nav>
+  <div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+      <div class="year section">
+        <label for="Action">Films populaires de :</label>
+        <select id="filter-years">`;
+
+  for (let year = 2020; year > 1950; year--) {
+    content += `<option>${year}</option>`;
+  }
+
+  content += `</select>
     </div>
   </div>
   <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">Trier</div>
@@ -470,6 +563,8 @@ movieFilter();
 
 // Display latest movies
 displayLatest();
+
+document.getElementById('filter-years').onchange = getByYear;
 
 // Display logo in menu
 document.getElementById('logo_batmovies').innerHTML = `<img src="dist/${logoBatmovies}" alt="Logo BatMovies">`;

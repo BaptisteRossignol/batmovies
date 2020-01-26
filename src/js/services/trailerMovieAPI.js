@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const creditsMovie = (url, apiKey) =>  (idMovie, callback) => {
+const creditsMovie = (url, apiKey) => (idMovie, callback) => {
   const request = axios.get(
     `${url}movie/${idMovie}/videos?api_key=${apiKey}&language=fr-FR`
   );
