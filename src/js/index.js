@@ -25,6 +25,35 @@ function timeConvert(num) {
   return `${hours}h${minutes}`;
 }
 
+function displayPage(pageName) {
+  const itemMovie = document.getElementById('movie');
+  const itemSearch = document.getElementById('search');
+  const itemLatest = document.getElementById('latest');
+  const itemFavorite = document.getElementById('favorites');
+
+  if (pageName === 'favorites') {
+    itemMovie.style.display = 'none';
+    itemLatest.style.display = 'none';
+    itemFavorite.style.display = 'flex';
+    itemSearch.style.display = 'none';
+  } else if (pageName === 'latest') {
+    itemMovie.style.display = 'none';
+    itemLatest.style.display = 'flex';
+    itemFavorite.style.display = 'none';
+    itemSearch.style.display = 'none';
+  } else if (pageName === 'search') {
+    itemMovie.style.display = 'none';
+    itemLatest.style.display = 'none';
+    itemFavorite.style.display = 'none';
+    itemSearch.style.display = 'flex';
+  } else if (pageName === 'one-movie') {
+    itemMovie.style.display = 'block';
+    itemLatest.style.display = 'none';
+    itemFavorite.style.display = 'none';
+    itemSearch.style.display = 'none';
+  }
+}
+
 window.deleteFavorite = function (id) {
   const element = document.getElementById(id);
   element.style.display = 'none';
@@ -155,15 +184,9 @@ window.displayFavorites = function () {
     document.getElementById('movies-favorites').innerHTML = content;
   }
 
-  document.getElementById('breadcrumb').innerHTML = `<p><a onclick="displayLatest()">Accueil</a> > Mes Favoris</p>`;
-  const itemMovie = document.getElementById('movie');
-  itemMovie.style.display = 'none';
-  const itemLatest = document.getElementById('latest');
-  itemLatest.style.display = 'none';
-  const itemFavorite = document.getElementById('favorites');
-  itemFavorite.style.display = 'flex';
-  const itemSearch = document.getElementById('search');
-  itemSearch.style.display = 'none';
+  document.getElementById('breadcrumb').innerHTML = '<p><a onclick="displayLatest()">Accueil</a> > Mes Favoris</p>';
+  displayPage('favorites');
+  loaderElement.style.display = 'none';
 };
 
 // Display latest movies function
@@ -234,21 +257,14 @@ window.displayLatest = function () {
         }
 
         content += `<button type="button" class="btn btn-light movie-details"><a onclick="displayOneMovie(${oneMovie.id})">Voir les détails</a></button></div>`;
-        content += `</div>`;
+        content += '</div>';
 
         document.getElementById('movies-latest').innerHTML = content;
       });
     });
 
-    document.getElementById('breadcrumb').innerHTML = `<p>Accueil</p>`;
-    const itemMovie = document.getElementById('movie');
-    itemMovie.style.display = 'none';
-    const itemLatest = document.getElementById('latest');
-    itemLatest.style.display = 'flex';
-    const itemFavorite = document.getElementById('favorites');
-    itemFavorite.style.display = 'none';
-    const itemSearch = document.getElementById('search');
-    itemSearch.style.display = 'none';
+    document.getElementById('breadcrumb').innerHTML = '<p>Accueil</p>';
+    displayPage('latest');
     loaderElement.style.display = 'none';
   });
 }
@@ -327,14 +343,7 @@ window.displaySearch = function () {
     });
 
     document.getElementById('breadcrumb').innerHTML = `<p><a onclick="displayLatest()">Accueil</a> > Recherche '${inputVal}'</p>`;
-    const itemMovie = document.getElementById('movie');
-    itemMovie.style.display = 'none';
-    const itemLatest = document.getElementById('latest');
-    itemLatest.style.display = 'none';
-    const itemFavorite = document.getElementById('favorites');
-    itemFavorite.style.display = 'none';
-    const itemSearch = document.getElementById('search');
-    itemSearch.style.display = 'flex';
+    displayPage("search");
     loaderElement.style.display = 'none';
     movieFilter();
   });
@@ -345,7 +354,6 @@ window.displayOneMovie = function(id) {
   const loaderElement = document.getElementById('loader-latest');
   const favoriteMovies = Object.keys(sessionStorage);
   searchById(id, (oneMovie) => {
-    console.log(oneMovie);
     const genresMovie = oneMovie.genres;
     const productionsMovies = oneMovie.production_companies;
     const date = new Date(oneMovie.release_date);
@@ -422,14 +430,7 @@ window.displayOneMovie = function(id) {
     document.getElementById('movie-one').innerHTML = content;
 
     document.getElementById('breadcrumb').innerHTML = `<p><a onclick="displayLatest()">Accueil</a> > ${oneMovie.title}</p>`;
-    const itemMovie = document.getElementById('movie');
-    itemMovie.style.display = 'block';
-    const itemLatest = document.getElementById('latest');
-    itemLatest.style.display = 'none';
-    const itemFavorite = document.getElementById('favorites');
-    itemFavorite.style.display = 'none';
-    const itemSearch = document.getElementById('search');
-    itemSearch.style.display = 'none';
+    displayPage('one-movie');
     loaderElement.style.display = 'none';
   });
 }
