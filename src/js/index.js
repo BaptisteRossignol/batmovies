@@ -11,6 +11,8 @@ import '../scss/main.scss';
 import searchAPI from './services/searchAPI';
 import latestAPI from './services/latestAPI';
 import searchByIdAPI from './services/searchByIdAPI';
+import creditsMovieAPI from './services/creditsMovieAPI';
+import trailerMovieAPI from './services/trailerMovieAPI';
 
 const linkAPI = 'https://api.themoviedb.org/3/';
 const keyAPI = '7773119c011cc12e9264e289fc360af2';
@@ -18,6 +20,8 @@ const keyAPI = '7773119c011cc12e9264e289fc360af2';
 const search = searchAPI(linkAPI, keyAPI);
 const latest = latestAPI(linkAPI, keyAPI);
 const searchById = searchByIdAPI(linkAPI, keyAPI);
+const creditsMovie = creditsMovieAPI(linkAPI, keyAPI);
+const trailerMovie = trailerMovieAPI(linkAPI, keyAPI);
 
 function timeConvert(num) {
   const hours = Math.floor(num / 60);
@@ -341,7 +345,7 @@ window.displaySearch = function () {
         document.getElementById('movies-search').innerHTML = content;
       });
     });
-
+    
     document.getElementById('breadcrumb').innerHTML = `<p><a onclick="displayLatest()">Accueil</a> > Recherche '${inputVal}'</p>`;
     displayPage("search");
     loaderElement.style.display = 'none';
@@ -354,84 +358,110 @@ window.displayOneMovie = function(id) {
   const loaderElement = document.getElementById('loader-latest');
   const favoriteMovies = Object.keys(sessionStorage);
   searchById(id, (oneMovie) => {
-    const genresMovie = oneMovie.genres;
-    const productionsMovies = oneMovie.production_companies;
-    const date = new Date(oneMovie.release_date);
-    const dateMovie = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-    const overviewSlice = oneMovie.overview;
+    creditsMovie(oneMovie.id, (credits) => {
+      trailerMovie(oneMovie.id, (trailers) => {
+        const genresMovie = oneMovie.genres;
+        const productionsMovies = oneMovie.production_companies;
+        const date = new Date(oneMovie.release_date);
+        const dateMovie = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+        const overviewSlice = oneMovie.overview;
 
-    let content = `<h1>${oneMovie.title}</h1>`;
+        let content = `<h1>${oneMovie.title}</h1>`;
 
-    if (favoriteMovies.includes(oneMovie.id.toString())) {
-      content += `<i id="${oneMovie.id}-detail" onclick="changeHeart(${oneMovie.id})" style="color: #ff0000" class="fas fa-heart"></i>`;
-    } else {
-      content += `<i id="${oneMovie.id}-detail" onclick="changeHeart(${oneMovie.id})" style="color: #cc0000" class="far fa-heart"></i>`;
-    }
+        if (favoriteMovies.includes(oneMovie.id.toString())) {
+          content += `<i id="${oneMovie.id}-detail" onclick="changeHeart(${oneMovie.id})" style="color: #ff0000" class="fas fa-heart"></i>`;
+        } else {
+          content += `<i id="${oneMovie.id}-detail" onclick="changeHeart(${oneMovie.id})" style="color: #cc0000" class="far fa-heart"></i>`;
+        }
 
-    content += '<div class="movie">';
+        content += '<div class="movie">';
 
-    if (oneMovie.poster_path == null) {
-      content += `<img src="dist/${anotherPoster}" alt="Aucune affiche disponible pour ce film">`;
-    } else {
-      content += `<img src="https://image.tmdb.org/t/p/w500/${oneMovie.poster_path}" class="movie-image" />`;
-    }
-    
-    content += `<div class="movie-description">
-    <div class="description-top">`;
-    
-    content += `</div>
-                <p class="movie-release-date"><i class="far fa-calendar-alt"></i>${dateMovie}`;
+        if (oneMovie.poster_path == null) {
+          content += `<img src="dist/${anotherPoster}" alt="Aucune affiche disponible pour ce film">`;
+        } else {
+          content += `<img src="https://image.tmdb.org/t/p/w500/${oneMovie.poster_path}" class="movie-image" />`;
+        }
 
-    if (oneMovie.runtime === 0 || oneMovie.runtime == null) {
-      content += '</p>';
-    } else {
-      content += ` | ${timeConvert(oneMovie.runtime)}`;
-    }
+        content += `<div class="movie-description">
+        <div class="description-top">`;
 
-    content += `<div class="star-rating">
-      <i class="far fa-star"></i>
-      <i class="far fa-star"></i>
-      <i class="far fa-star"></i>
-      <i class="far fa-star"></i>
-      <i class="far fa-star"></i>
-      <div class="star-rating-red" style="width: ${oneMovie.vote_average * 10}%">
-        <i class="fas fa-star"></i>
-        <i class="fas fa-star"></i>
-        <i class="fas fa-star"></i>
-        <i class="fas fa-star"></i>
-        <i class="fas fa-star"></i>
-      </div>
-    </div>`;
+        content += `</div>
+                    <p class="movie-release-date"><i class="far fa-calendar-alt"></i>${dateMovie}`;
 
-    if (overviewSlice === '') {
-      content += "<p class='movie-overview'>Aucune description n'est disponible pour ce film.</p>";
-    } else {
-      content += `<p class="movie-overview">${overviewSlice}</p>`;
-    }
+        if (oneMovie.runtime === 0 || oneMovie.runtime == null) {
+          content += '</p>';
+        } else {
+          content += ` | ${timeConvert(oneMovie.runtime)}`;
+        }
 
-    content += '</div></div>';
+        content += `<div class="star-rating">
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+          <i class="far fa-star"></i>
+          <div class="star-rating-red" style="width: ${oneMovie.vote_average * 10}%">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+        </div>`;
 
-    genresMovie.forEach((genreMovie) => {
-      content += `<span class="badge badge-secondary">${genreMovie.name}</span>`;
+        if (overviewSlice === '') {
+          content += "<p class='movie-overview'>Aucune description n'est disponible pour ce film.</p>";
+        } else {
+          content += `<p class="movie-overview">${overviewSlice}</p>`;
+        }
+
+        content += '</div></div>';
+
+        if (Array.isArray(genresMovie) && genresMovie.length) {
+          content += '<div class="col-12 genres-movie">';
+
+          genresMovie.forEach((genreMovie) => {
+            content += `<span class="badge badge-secondary">${genreMovie.name}</span>`;
+          });
+
+          content += '</div>';
+        }
+
+        if (Array.isArray(credits.cast) && credits.cast.length) {
+          content += '<div class="col-12 col-md-6"><h2>Crédits</h2><p>';
+
+          credits.cast.forEach((credit) => {
+            content += `${credit.name} - `;
+          });
+
+          content += '</p></div>';
+        }
+
+        if (Array.isArray(trailers.results) && trailers.results.length) {
+          content += '<div class="col-12 col-md-6"><h2>Bande annonce</h2>';
+          content += `<iframe src="https://www.youtube.com/embed/${trailers.results[0].key}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+        }
+
+        if (Array.isArray(productionsMovies) && productionsMovies.length) {
+          content += '<div class="col-12 movie-production"><h2>Productions</h2><div class="movie-production-content">';
+
+          productionsMovies.forEach((productionMovie) => {
+            if (productionMovie.logo_path) {
+              content += `<img src="https://image.tmdb.org/t/p/w500/${productionMovie.logo_path}" />`;
+            } else {
+              content += `<p>${productionMovie.name} </p>`;
+            }
+          });
+
+          content += '</div></div>';
+        }
+
+        document.getElementById('movie-one').innerHTML = content;
+        document.getElementById('breadcrumb').innerHTML = `<p><a onclick="displayLatest()">Accueil</a> > ${oneMovie.title}</p>`;
+        displayPage('one-movie');
+        loaderElement.style.display = 'none';
+      });
     });
-
-    content += '<div class="movie-productions">';
-
-    productionsMovies.forEach((productionMovie) => {
-      if (productionMovie.logo_path) {
-        content += `<img src="https://image.tmdb.org/t/p/w500/${productionMovie.logo_path}" />`;
-      } else {
-        content += `<p>${productionMovie.name}</p>`;
-      }
-    });
-
-    content += '</div>';
-
-    document.getElementById('movie-one').innerHTML = content;
-
-    document.getElementById('breadcrumb').innerHTML = `<p><a onclick="displayLatest()">Accueil</a> > ${oneMovie.title}</p>`;
-    displayPage('one-movie');
-    loaderElement.style.display = 'none';
   });
 }
 

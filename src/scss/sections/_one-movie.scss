@@ -1,0 +1,34 @@
+.genres-movie {
+    margin: 10px 0 30px;
+
+    .badge {
+        &:not(:last-child) {
+            margin-right: 10px;
+        }
+    }
+}
+
+.movie-production {
+    margin-top: 20px;
+
+    &-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin-top: 20px;
+    
+        @media (max-width: 576px) {
+            flex-direction: column;
+        }
+    
+        img {
+            max-width: 120px;
+            margin: 0 20px;
+    
+            @media (max-width: 576px) {
+                margin: 20px 0;
+            }
+        }
+    }
+}
